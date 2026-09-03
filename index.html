@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MagangHub Explorer — Direktori & Filter Penyelenggara Magang Kemnaker</title>
+  <meta name="description" content="Eksplorasi dan filter 1.700 penyelenggara magang resmi Kemnaker RI. Filter Jabodetabek, instansi pemerintah vs swasta, dan ranking tier perusahaan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <a href="." class="brand-link">
+          <span class="brand-title">MagangHub</span>
+          <span class="brand-tag">Kemnaker RI</span>
+        </a>
+      </div>
+
+      <div class="header-nav">
+        <button id="btn-favorites-toggle" class="btn-ghost" type="button" aria-pressed="false">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Favorit</span>
+          <span id="fav-count-badge" class="count-badge">0</span>
+        </button>
+
+        <button id="btn-export" class="btn-ghost" type="button" title="Download data hasil filter">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Export CSV</span>
+        </button>
+
+        <button id="btn-theme-toggle" class="btn-icon" type="button" aria-label="Ganti mode tampilan">
+          <svg id="theme-icon-sun" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <!-- Search & Filter Controls -->
+    <section class="control-panel">
+      <!-- Search Input Row -->
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Cari nama perusahaan, instansi, kota, alamat, atau industri..." 
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button id="search-clear-btn" class="search-clear-btn hidden" type="button" aria-label="Hapus pencarian">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Sort Select -->
+        <div class="sort-wrap">
+          <label for="sort-select" class="sr-only">Urutkan</label>
+          <select id="sort-select" class="select-clean">
+            <option value="tier_desc">Urutkan: Tier Tertinggi (BUMN/Pusat)</option>
+            <option value="tier_asc">Urutkan: Tier Terendah (Lokal/SME)</option>
+            <option value="vacancies_desc">Urutkan: Lowongan Terbanyak</option>
+            <option value="vacancies_asc">Urutkan: Lowongan Tersedikit</option>
+            <option value="name_asc">Urutkan: Nama (A-Z)</option>
+            <option value="name_desc">Urutkan: Nama (Z-A)</option>
+            <option value="city_asc">Urutkan: Kota (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Filter Pills -->
+      <div class="quick-filters-row">
+        <div class="filter-pills-group" role="tablist" aria-label="Filter Cepat">
+          <button class="pill active" data-filter="all" type="button">Semua (1.700)</button>
+          <button class="pill" data-filter="jabo" type="button">Jabodetabek</button>
+          <button class="pill" data-filter="luar-jabo" type="button">Luar Jabodetabek</button>
+          <button class="pill" data-filter="gov" type="button">Pemerintah</button>
+          <button class="pill" data-filter="corp" type="button">Swasta & BUMN</button>
+          <button class="pill" data-filter="tier-1" type="button">Tier 1 (High Tier)</button>
+          <button class="pill" data-filter="massive" type="button">Lowongan &gt; 50</button>
+        </div>
+
+        <button id="btn-toggle-advanced" class="btn-toggle-adv" type="button" aria-expanded="false">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <span>Filter Lanjutan</span>
+          <svg class="icon-sm chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Collapsible Advanced Filters Drawer -->
+      <div class="advanced-filters-drawer hidden" id="advanced-filters-drawer">
+        <div class="advanced-filters-grid">
+          <!-- Filter Provinsi -->
+          <div class="filter-field">
+            <label for="province-select" class="field-label">Provinsi</label>
+            <select id="province-select" class="select-clean">
+              <option value="all">Semua Provinsi</option>
+            </select>
+          </div>
+
+          <!-- Filter Kota -->
+          <div class="filter-field">
+            <label for="city-select" class="field-label">Kota / Kabupaten</label>
+            <select id="city-select" class="select-clean">
+              <option value="all">Semua Kota</option>
+            </select>
+          </div>
+
+          <!-- Filter Tier -->
+          <div class="filter-field">
+            <label for="tier-select" class="field-label">Klasifikasi Tier</label>
+            <select id="tier-select" class="select-clean">
+              <option value="all">Semua Tier</option>
+              <option value="1">Tier 1 (BUMN / Kementerian / Tbk)</option>
+              <option value="2">Tier 2 (Pemda / Balai UPT / RSUD)</option>
+              <option value="3">Tier 3 (Swasta Lokal / SME)</option>
+            </select>
+          </div>
+
+          <!-- Filter Rentang Lowongan -->
+          <div class="filter-field">
+            <label for="vacancy-range-select" class="field-label">Rentang Kuota Lowongan</label>
+            <select id="vacancy-range-select" class="select-clean">
+              <option value="all">Semua Rentang</option>
+              <option value="massive">&gt; 50 Lowongan</option>
+              <option value="large">21 - 50 Lowongan</option>
+              <option value="medium">6 - 20 Lowongan</option>
+              <option value="small">1 - 5 Lowongan</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Category Tags -->
+        <div class="category-tags-wrap">
+          <span class="field-label">Kategori Sektor:</span>
+          <div class="tags-pill-list" id="category-pills">
+            <button class="tag-btn" data-tag="BUMN / BUMD" type="button">BUMN / BUMD</button>
+            <button class="tag-btn" data-tag="Instansi Pemerintah" type="button">Instansi Pemerintah</button>
+            <button class="tag-btn" data-tag="Perusahaan Terbuka (Tbk)" type="button">Perusahaan Publik (Tbk)</button>
+            <button class="tag-btn" data-tag="Kesehatan & Rumah Sakit" type="button">Kesehatan &amp; RS</button>
+            <button class="tag-btn" data-tag="Pendidikan & Pelatihan" type="button">Pendidikan &amp; Pelatihan</button>
+            <button class="tag-btn" data-tag="Perbankan & Finansial" type="button">Perbankan &amp; Finansial</button>
+            <button class="tag-btn" data-tag="Teknologi & Media" type="button">Teknologi &amp; Media</button>
+            <button class="tag-btn" data-tag="Retail & FMCG" type="button">Retail &amp; FMCG</button>
+          </div>
+        </div>
+
+        <div class="drawer-actions">
+          <button id="btn-reset-filters" class="btn-link" type="button">Reset ke Pengaturan Awal</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meta / Summary Bar -->
+    <section class="summary-bar">
+      <div class="summary-left">
+        <span id="results-headline" class="summary-text">Memuat data...</span>
+        <span class="summary-separator">•</span>
+        <span id="results-counter" class="summary-sub">0 instansi</span>
+      </div>
+
+      <div class="summary-right">
+        <label for="per-page-select" class="per-page-label">Tampilkan:</label>
+        <select id="per-page-select" class="select-clean-sm">
+          <option value="24" selected>24</option>
+          <option value="48">48</option>
+          <option value="96">96</option>
+          <option value="all">Semua</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Active Filter Chips -->
+    <div class="active-chips-bar hidden" id="active-chips-bar">
+      <div class="chips-list" id="active-chips-list"></div>
+      <button id="btn-clear-all-chips" class="btn-clear-chips" type="button">Hapus Semua</button>
+    </div>
+
+    <!-- Company Grid -->
+    <div class="companies-grid" id="companies-grid" role="region" aria-label="Daftar Penyelenggara"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state hidden" id="empty-state">
+      <div class="empty-state-content">
+        <h3>Tidak ada instansi yang cocok</h3>
+        <p>Coba gunakan kata kunci yang lebih umum atau reset filter yang sedang aktif.</p>
+        <button id="btn-empty-reset" class="btn-primary" type="button">Reset Semua Filter</button>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pagination-nav" id="pagination-nav" aria-label="Navigasi Halaman">
+      <button id="btn-prev-page" class="btn-page" type="button" disabled>
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Sebelumnya</span>
+      </button>
+      <div class="page-numbers" id="page-numbers"></div>
+      <button id="btn-next-page" class="btn-page" type="button">
+        <span>Selanjutnya</span>
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </nav>
+  </main>
+
+  <!-- Modal Detail -->
+  <div class="modal-backdrop hidden" id="detail-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-header-top">
+          <div class="modal-badges" id="modal-badges"></div>
+          <button class="modal-close-btn" id="modal-close-btn" type="button" aria-label="Tutup dialog">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="modal-identity">
+          <div class="modal-logo-wrap" id="modal-logo-wrap"></div>
+          <div class="modal-title-group">
+            <h2 id="modal-title" class="modal-title">Nama Instansi</h2>
+            <p id="modal-type" class="modal-subtitle">Tipe Organisasi</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-metrics">
+          <div class="metric-block">
+            <span class="metric-label">Lowongan Aktif</span>
+            <span id="modal-vacancies" class="metric-value metric-accent">0</span>
+          </div>
+          <div class="metric-block">
+            <span class="metric-label">Kota / Kabupaten</span>
+            <span id="modal-region" class="metric-value">-</span>
+          </div>
+          <div class="metric-block">
+            <span class="metric-label">Klasifikasi Tier</span>
+            <span id="modal-tier" class="metric-value">-</span>
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <h3 class="row-title">Alamat Kantor</h3>
+          <p id="modal-address" class="row-text">Alamat lengkap kantor.</p>
+          <div class="row-actions">
+            <button id="btn-copy-address" class="btn-sm-ghost" type="button">Salin Alamat</button>
+            <a id="link-gmaps" href="#" target="_blank" rel="noopener noreferrer" class="btn-sm-ghost">
+              <span>Buka Google Maps</span>
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="modal-row" id="modal-desc-section">
+          <h3 class="row-title">Deskripsi Profil</h3>
+          <p id="modal-desc" class="row-text">Deskripsi instansi.</p>
+        </div>
+
+        <div class="modal-row" id="modal-reasons-section">
+          <h3 class="row-title">Indikator Penilaian Tier</h3>
+          <div class="modal-tags" id="modal-reasons-tags"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="modal-btn-fav" class="btn-ghost" type="button">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span id="modal-fav-text">Simpan Favorit</span>
+        </button>
+        <a id="modal-link-maganghub" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          <span>Buka di Maganghub Kemnaker</span>
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <span>Data bersumber dari <strong>Kemnaker RI Maganghub Nasional</strong> (1.700 penyelenggara).</span>
+      <span class="footer-separator">•</span>
+      <span>Arsitektur static frontend, zero backend.</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/penyelenggara_data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

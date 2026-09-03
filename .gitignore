@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# System Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE & Editor
+.vscode/
+.idea/
+
+# Private Personal Data & Context
+profile_complete.json
+AI_CONTEXT_GUIDE.md
+penyelenggara.json

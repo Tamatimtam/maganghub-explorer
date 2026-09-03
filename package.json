@@ -1,0 +1,22 @@
+{
+  "name": "maganghub-explorer",
+  "version": "1.0.0",
+  "description": "Explorer, filter, and ranking web app for 1,700 Kemnaker Maganghub penyelenggara",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx -y serve .",
+    "dev": "python3 -m http.server 3000",
+    "enrich": "python3 scripts/enrich_data.py"
+  },
+  "keywords": [
+    "maganghub",
+    "kemnaker",
+    "internship",
+    "magang",
+    "indonesia",
+    "bumn",
+    "jabodetabek"
+  ],
+  "author": "Pratama Varian",
+  "license": "MIT"
+}
