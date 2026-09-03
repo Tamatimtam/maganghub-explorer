@@ -65,15 +65,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   let activeModalItem = null;
   let searchDebounceTimer = null;
 
-  // 1. Theme (Default to Light)
+  // 1. Theme (Default to Light Mode)
   function initTheme() {
-    const saved = window.AppStorage.getTheme();
-    const effective = saved || 'light';
-    document.documentElement.setAttribute('data-theme', effective);
+    let saved = window.AppStorage.getTheme();
+    if (!saved || saved === 'dark') {
+      saved = 'light';
+      window.AppStorage.setTheme('light');
+    }
+    document.documentElement.setAttribute('data-theme', 'light');
   }
 
   function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
     const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     window.AppStorage.setTheme(next);

@@ -58,14 +58,14 @@ const AppStorage = {
   },
 
   /**
-   * Mengambil preferensi tema ('dark' atau 'light')
+   * Mengambil preferensi tema ('light' atau 'dark', default: 'light')
    * @returns {string}
    */
   getTheme() {
     try {
-      return localStorage.getItem(STORAGE_KEYS.THEME) || 'dark';
+      return localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
     } catch (e) {
-      return 'dark';
+      return 'light';
     }
   },
 
